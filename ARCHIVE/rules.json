@@ -1,0 +1,15 @@
+{
+    "scenery" : ["Before you lies #location_adjective.a# #location_type#", "#location_adjective.a.capitalize# #location_type# surrounds you.", 
+        "You stumble into the most #location_adjective# #location_type# that you have ever seen."],
+    "on_enter" : ["#[location_adjective:#adjective#][location_type:#microbiome#]scenery#"],
+    "adjective" : ["blooming", "dry", "snowy", "desolate", "special", "alluring", "dreary",	"spectacular", "appealing",	"lively", "arctic",	"lovely",
+        "sprouting", "arresting", "luscious", "elegant", "enchanting", "massive", "awe-inspiring", "sun-drenched", "barren", "enticing", "sun-filled",
+        "sun-kissed", "beautiful", "ethereal", "sunlit", "beguiling", "mountainous", "sunny", "blazing", "expansive", "blissful", "exquisite", "sweet",
+        "blooming",	"fair", "sweet-smelling", "blossoming", "far-flung", "blue", "fascinating", "paradisiac", "breathtaking", "fertile", "parched",
+        "breezy", "pastel", "tender", "bright", "flawless", "peaceful", "thriving", "budding", "picture-perfect", "towering", "bustling", "picturesque",
+        "buzzing", "flourishing", "unforgiving", "pleasant", "unique", "fragrant", "pretty", "charming", "fresh", "pure", "cheerful", "gentle", "quaint", 
+        "verdant", "grassy", "rainy", "clean", "green", "vibrant", "cloudless", "happy", "refreshing", "cloudy", "harsh", "rejuvenating", "warm", "healthy",
+        "relaxing", "wild", "colorful", "heavenly", "windswept", "windy", "ideal", "wondrous", "incredible", "wooded", "delightful", "inspiring", "dense",
+        "invigorating"],
+    "microbiome" : ["woodland", "sandbar", "waterfall", "creek", "cavern", "valley", "snowbank", "hill", "lake"]
+}
