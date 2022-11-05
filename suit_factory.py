@@ -4,6 +4,7 @@ from dragon import Dragon
 from coral import Coral
 
 class SuitFactory(suit):
+    # Woopsie doodle, factories are inside of tree and suit... they shouldn't be
     try:
         if suit == "HEMLOCK":
             return Hemlock()
