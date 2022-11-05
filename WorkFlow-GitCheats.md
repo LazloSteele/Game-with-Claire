@@ -29,6 +29,11 @@
 	
 ## Common git tasks howtos/etc.
 
+Checking differences
+   * git diff		(changes relative to staging)
+   * git diff --cached    (changes staging to HEAD)
+   * git diff HEAD	(changes working tree relative to HEAD)
+
 Working with branches:
 	Show available branches and current (checked out) branch
 		git branch [--list [pattern]]
@@ -36,10 +41,9 @@ Working with branches:
 	Show remote branches:
 		git branch -r
 
-	Change working copy to branch:
-
 	Fetch and merge from remote into current branch:
 		git pull
+
 	Fetch from remote w/o merge:
 		git fetch
 	

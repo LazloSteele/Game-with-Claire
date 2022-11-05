@@ -1,7 +1,7 @@
 
 # vim files
-*~
-*.sw?
+**/*~
+**/*.sw?
 
 # python artifacts
 __pycache__/
