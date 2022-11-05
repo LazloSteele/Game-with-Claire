@@ -2,6 +2,7 @@ from describe_room import DescribeRoom
 from game_object import GameObject
 import random
 import assets
+from elm import Elm
 
 class Room(GameObject):
     def __init__(self):
@@ -24,8 +25,18 @@ class Room(GameObject):
         for plant_type in assets.Plants:
             n = random.randint(1, 6)
             while n > 0:
-                self.contents.append(assets.TreeFactory(random.choice(plant_type)))
+                self.contents.append(self.generate_tree(random.choice(plant_type)))
                 n -= 1
+
+    @staticmethod
+    def generate_tree(tree):
+        try:
+            if tree == 'ELM':
+                return Elm()
+            raise AssertionError("Tree is not valid")
+        except AssertionError as e:
+            print(e)
+        
 
     
     

@@ -13,10 +13,6 @@ class Game():
 
         self.main()
 
-
-    def header(self):
-        return f"Location: Room {self._location} of {len(self._past_rooms)} explored"
-
     def main(self):
         playing = True
 
@@ -24,7 +20,6 @@ class Game():
         self._controller.look(None)
         
         while playing == True:
-            
         
             command = input("What do you do?")
 
