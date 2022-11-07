@@ -8,7 +8,14 @@ class Game():
     def __init__(self):
         self._cmdline_args = self.process_cmdline()
         print( 'Cmdline Args:', self._cmdline_args)
-        print( self._cmdline_args.config_path)
+        print( 
+            [
+                self._cmdline_args.game_name,
+                self._cmdline_args.config_path
+            ]
+        )
+
+        # player_name default = Guest
         self._player = Player()
         self._game_state = GameState(self._player)
     
