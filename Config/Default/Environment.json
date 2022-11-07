@@ -1,0 +1,15 @@
+coral.py:        self._descriptors = ['craggy', 'bright', 'friendly', 'cheerful', 'orange', 'lively', 'rough', 'jagged', 'loud', 'soft', 'delicate']
+
+dragon.py:        self._descriptors = ['rich', 'splendid', 'grand', 'majestic', 'tall', 'sturdy', 'emerald', 'golden', 'wrathful', 'angry', 'intimidating']
+
+elm.py:        self._descriptors = {'sturdy', 'thick', 'majestic', 'tall', 'stunted', 'wicked', 'plain', 'lonely'}
+
+game_object.py:        adjectives = list(self._descriptors.intersection(self._suit.descriptors))
+
+hemlock.py:        self._descriptors = ['treacherous', 'poisonous', 'wicked', 'thick', 'dense', 'homogenous', 'crowded', 'sickly', 'mournful', 'deadly', 'deceitful']
+hemlock.py:    def descriptors(self):
+hemlock.py:        return self._descriptors
+
+relic.py:        self._descriptors = ['steep', 'winding', 'ancient', 'mysterious', 'grey', 'rusted', 'broken', 'layered', 'crumbling', 'cracking', 'burnt']
+
+suit.py:        self._descriptors = None
