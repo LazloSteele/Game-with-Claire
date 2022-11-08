@@ -15,7 +15,9 @@ def _make_load_path( env_name, cfg_path, cfg_file ):
 
 class GameConfig():
     def __init__(self):
-        pass
+        self._suits = []
+        self._cfg_data = {}
+        self._source_filename = 'Filename has not been initialized (pending call to load_config ?)'
 
     def load_config( self, env_name='default', cfg_path='Config', cfg_file='GameSettings.json'):
         """ 
@@ -31,15 +33,61 @@ class GameConfig():
         cfg_path ['Config']: (string) path to the env_name directory. Default: ;
         cfg_file ['GameSettings.json']: (string) Name of file holding the configuration
 
-        Returns: tbd
-        Exceptions: tbd
+        Returns: boolean (for now)
+        Exceptions: JSONDecodeError and tbd (for now)
 
         """
-        self._source_filename = _make_load_path(env_name, cfg_path, cfg_file)
-        if os.path.isfile( self._source_filename ):
-            print( f'{self._source_filename} exists')
-        else:
+
+        self._source_filename = _make_load_path( env_name, cfg_path, cfg_file )
+        if not os.path.isfile( self._source_filename ):
             print( f'{self._source_filename} does not exist' )
+            return False
+
+        rv = True
+        try: 
+            fp = open( self._source_filename )
+            self._cfg_data = json.load( fp )
+        except JSONDecodeError(msg,doc,pos):
+            print('An error occurred in doc: msg')
+            raise JSONDecodeError(msg,poc,pos)
+        except OSError(errno, strerror):
+            print( f'OSError exception caught, {errno}, {strerror}' )
+            raise OSError(errno, strerror)
+        except:
+            print('Unknown exception caught, probably in open')
+            rv = False
+        finally:
+            fp.close()
+        self._organize( self._cfg_data )
+        return rv
+
+
+    def _organize( self, data ):
+        """ 
+        Business logic to decode the raw data from the higer level organization.
+        Questionable approach but will see if it shakes out
+
+        Assumed a "private method" where data will be the self._cfg_data unless called from unit test code
+        """
+        # versionings, when/if needed assumed under top level object 'version' as [major, minor ] in the cfg data
+        self._suits = list( data['suit_attrs'].keys() )
+
+    def get_suits(self):
+        """
+        Returns list of available suits
+        """
+        return self._suits
+
+    def get_suit_descriptor(self, suit):
+        """
+        Returns desciptor from passed in suit
+        Todo: define error handling, can throw if access invalid
+        """
+        suit_vals = self._cfg_data['suit_attrs'][suit]
+        return suit_vals['descriptors']
+
+
+        
 
 
 

@@ -1,5 +1,6 @@
 
 {
+        "version" : [1 , 0 ],
         "suit_attrs" : {
                 "HEMLOCK" : {
                     "descriptors" : [
@@ -14,7 +15,8 @@
                         "mournful",
                         "deadly",
                         "deceitful"
-                    ] ,
+                    ] 
+                },
                 "RELIC" : {
                     "descriptors" : [
                          "steep",
