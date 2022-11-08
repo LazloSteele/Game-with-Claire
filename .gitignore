@@ -3,5 +3,9 @@
 **/*~
 **/*.sw?
 
+# garbage files which are created w/ intent to be ignore
+**/crap.*
+**/temp.*
+
 # python artifacts
 __pycache__/
