@@ -1,20 +1,13 @@
 from player import Player
 from controller import Controller
 from game_state import GameState
-from game_config import GameConfig
+from game_config import GameConfigLoader,GameConfig
 import argparse
 
 class Game():
     def __init__(self):
         self._cmdline_args = self.process_cmdline()
-        print( 'Cmdline Args:', self._cmdline_args)
-        print( 
-            [
-                self._cmdline_args.game_name,
-                self._cmdline_args.config_path
-            ]
-        )
-
+        GameConfigLoader().load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
         # player_name default = Guest
         self._player = Player()
         self._game_state = GameState(self._player)
@@ -32,7 +25,7 @@ class Game():
         )
         parser.add_argument(
             '--config_path', 
-            default='.\Config', 
+            default='Config', 
             metavar='GameConfigFolder',
             help='Path to the game_name .json config'
         )

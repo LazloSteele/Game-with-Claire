@@ -3,25 +3,33 @@ import json
 import re
 import os.path
 
-def _make_load_path( env_name, cfg_path, cfg_file ):
+# loaded Config gets initialed to a GameConfigLoader as the final step in the load_game_config.
+# In turn copied by the GameConfig class which is meant to be the interface to the configuration
+loadedConfig = None 
+
+class GameConfigLoader():
     """
-    Creates the load source filename from passed in parameters.
-        Internal class method, not expecting self.
-        """
-    delim = r'\\'
-    pathname = cfg_path + delim + env_name + delim + cfg_file
-    return os.path.normpath(pathname)
-
-
-class GameConfig():
+    GameConfigLoader loads in the game configuration from the specified json file then copies self
+    to the module level global 'loadedConfig'
+    Only method meant to be called externally is load_game_config
+    """
     def __init__(self):
-        self._suits = []
-        self._cfg_data = {}
-        self._source_filename = 'Filename has not been initialized (pending call to load_config ?)'
+        pass
 
-    def load_config( self, env_name='default', cfg_path='Config', cfg_file='GameSettings.json'):
+    @staticmethod
+    def _make_load_path( env_name, cfg_path, cfg_file ):
+        """
+        Creates the load source filename from passed in parameters.
+        Internal class method, not expecting self.
+        Static to facilitate unit testing
+        """
+        delim = r'\\'
+        pathname = cfg_path + delim + env_name + delim + cfg_file
+        return os.path.normpath(pathname)
+
+    def load_game_config( self, env_name='default', cfg_path='Config', cfg_file='GameSettings.json'):
         """ 
-        Loads the game environment.
+        Top level function to loads the game environment.
 
         Lower level comfiguration of the game environment. 
         Not responsible for restoration of a prior saved game state.
@@ -38,7 +46,7 @@ class GameConfig():
 
         """
 
-        self._source_filename = _make_load_path( env_name, cfg_path, cfg_file )
+        self._source_filename = GameConfigLoader._make_load_path( env_name, cfg_path, cfg_file );
         if not os.path.isfile( self._source_filename ):
             print( f'{self._source_filename} does not exist' )
             return False
@@ -58,9 +66,11 @@ class GameConfig():
             rv = False
         finally:
             fp.close()
-        self._organize( self._cfg_data )
-        return rv
 
+        self._organize( self._cfg_data )
+        global loadedConfig
+        loadedConfig = self;
+        return rv
 
     def _organize( self, data ):
         """ 
@@ -72,22 +82,32 @@ class GameConfig():
         # versionings, when/if needed assumed under top level object 'version' as [major, minor ] in the cfg data
         self._suits = list( data['suit_attrs'].keys() )
 
+
+
+class GameConfig():
+    """ 
+    GameConfig provides the interface to the attributes in a previously loaded GameConfigLoader
+    """
+    def __init__(self):
+        global loadedConfig
+        self._loaded_cfg = loadedConfig 
+
+
     def get_suits(self):
         """
         Returns list of available suits
         """
-        return self._suits
+        return self._loaded_cfg._suits
 
     def get_suit_descriptor(self, suit):
         """
         Returns desciptor from passed in suit
         Todo: define error handling, can throw if access invalid
         """
-        suit_vals = self._cfg_data['suit_attrs'][suit]
+        suit_vals = self._loaded_cfg._cfg_data['suit_attrs'][suit]
         return suit_vals['descriptors']
 
-
-        
+            
 
 
 
