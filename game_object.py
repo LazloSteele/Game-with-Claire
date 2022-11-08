@@ -13,7 +13,8 @@ class GameObject():
         self._descriptors = NotImplemented
         self._features = NotImplemented
 
-        self._suit = self.suit_factory(random.choice(assets.Suits))
+        #self._suit = self.suit_factory(random.choice(assets.Suits))
+        self._suit = self.suit_factory( assets.Suits().random_suit() )
 
     @property
     def name(self):
