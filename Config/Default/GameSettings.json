@@ -1,0 +1,67 @@
+
+{
+        "version" : [1 , 0 ],
+        "suit_attrs" : {
+                "HEMLOCK" : {
+                    "descriptors" : [
+                        "treacherous", 
+                        "poisonous", 
+                        "wicked", 
+                        "thick", 
+                        "dense",
+                        "homogenous",
+                        "crowded",
+                        "sickly",
+                        "mournful",
+                        "deadly",
+                        "deceitful"
+                    ] 
+                },
+                "RELIC" : {
+                    "descriptors" : [
+                         "steep",
+                         "winding",
+                         "ancient",
+                         "mysterious",
+                         "grey",
+                         "rusted",
+                         "broken",
+                         "layered",
+                         "crumbling",
+                         "cracking",
+                         "burnt"
+                    ]
+                },
+                "CORAL" : {
+                    "descriptors" : [
+                        "craggy",
+                        "bright",
+                        "friendly",
+                        "cheerful",
+                        "orange",
+                        "lively",
+                        "rough",
+                        "jagged",
+                        "loud",
+                        "soft",
+                        "delicate"
+                    ]
+                },
+                "DRAGON" : {
+                    "descriptors" : [
+                        "rich", 
+                        "splendid", 
+                        "grand",
+                        "majestic",
+                        "tall",
+                        "sturdy",
+                        "emerald",
+                        "golden",
+                        "wrathful",
+                        "angry",
+                        "intimidating"
+                    ]
+                }
+        }
+}
+
