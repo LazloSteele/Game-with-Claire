@@ -35,6 +35,14 @@ class GameObject():
     @staticmethod
     def suit_factory(suit):
         try:
+            return globals()[suit.capitalize()]()
+        except AssertionError as e:
+            print(e)
+
+
+    @staticmethod
+    def suit_factory_static(suit):
+        try:
             if suit == "HEMLOCK":
                 return Hemlock()
             elif suit == "RELIC":
