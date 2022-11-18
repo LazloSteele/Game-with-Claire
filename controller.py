@@ -49,3 +49,11 @@ class Controller():
 
     def action_error(self):
         print('I am sorry, that action is not valid')
+
+
+# XXX first step in migrating to subclass
+class PlayerController(Controller):
+    def __init__(self, game_state):
+        super().__init__(game_state)
+
+

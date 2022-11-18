@@ -1,38 +1,61 @@
 # Game Objects
 
-Work in progress. Non structured list of potential objects within the game.
+Work in progress. 
 
-## Current 
-##### Game
-* has a player -- attached to game_state, otherwise not accessed
-* has a game_state -- attached to controller, (dangling access for current_room)
-* has a current_room -- not accessed
-* has a controller
+### Game
+No properties
+Responsible for 
+* processing cmd line parameters
+* loading game config
+* instantiating game_impl and passing control
 
-##### Controller
-    basically command dispatching
-* has a game_state
-* has a action, target -- not needed, can be locals pass directly to dispatch
+### game_impl -- abstract game class
+* run method
 
-##### Game_state
-* has the (site) map
-* has the player
+### GenesisGame -- initial game impl
+* has a GameState
+* has a Controller
+in process, moving controller into actors
+    
+### Controller
+currently
+* has an attached game_state
+* handles the player action
+in process, subclassing for various active components .. initially player
+
+
+### GameState
+currently
+* has the (site) map (raw hash, which it maintains)
+* has a human player
 * has a season
+* has a current_room concept 
+projected 
+* has a sitemap object 
+* has a player list
+* current_room is held within the players context
+
+##### Player    
+* has location (raw array with a getter/setter)
+inprocess
+* (consider inheriting from 'Actor' abstraction) 
+* has Controller()
+* inherits from PlayerContext
+* subclassed by HumanPlayer
+projected
+* location will be held within a tbd.Location() object, 
+* -- to be flushed out --
+
+
+##### GameObject and related GameAssets related modules
+* documentation pending 
+
+*Below here are varying levels or correctness, randomness, and just plain wrong*
 
 ##### Room
 * has name
 * has content
 * has focus (? player specific)
-
-##### Player
-* has location
-
-##### Game object and multiple related modules
-* documentation pending 
-## End Current
-
-****************************************************************
-## Start Refactored
 
 #### Game
 * has PlayerQueue
@@ -71,12 +94,6 @@ Work in progress. Non structured list of potential objects within the game.
 * has build mode .. automated/interactive
 * can load
 * can save
-
-### Player
-* is a PlayerCreature
-* has location
-* can receive PlayerEvents
-* can generate PlayInputEvents
 
 ### PlayerCreature
 * has name
@@ -119,9 +136,4 @@ Work in progress. Non structured list of potential objects within the game.
 * LockedState
 * Visible
           
-### Game objects
-* have name, description
-* receives game object events
-* generates game object events
-      
           

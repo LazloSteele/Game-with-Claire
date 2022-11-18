@@ -1,13 +1,13 @@
 
 from game_config import GameConfig
-from player import Player
+from player import HumanPlayer
 from room import Room
 
 class GameState():
     def __init__(self):
         self._map = {}
         self._player_name = GameConfig().player_name("You")
-        self._player = Player(self._player_name)
+        self._player = HumanPlayer(self,self._player_name)
         self._season = 'SUMMER'
 
     @property

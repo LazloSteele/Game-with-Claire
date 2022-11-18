@@ -24,20 +24,21 @@ class GameImpl():
 class GenesisGame():
     def __init__(self):
         self._game_state = GameState()
-        self._controller = Controller(self._game_state)
+        #self._controller = Controller(self._game_state)
         pass
 
     def run(self):
-        playing = True
-
         print('Type "QUIT" at any time to exit the game.')
-        self._game_state.current_room()
-        self._controller.look(None)
-        while playing == True:
-            command = input("What do you do?")
-            if command.upper() == 'QUIT':
-                return 1
-            self._controller.interpret(command)
-
+        self._game_state.current_room() # initial first room, to be removed 
+        next_actor = self._game_state.player
+        #self._controller.look(None)     # look into why needed
+        while True:
+            result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
+            if result == 1:
+                return result;
+            #command = input("What do you do?")
+            #if command.upper() == 'QUIT':
+            #    return 1
+            #self._controller.interpret(command)
         return 0
 
