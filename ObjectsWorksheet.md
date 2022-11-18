@@ -2,14 +2,52 @@
 
 Work in progress. Non structured list of potential objects within the game.
 
+## Current 
+##### Game
+* has a player -- attached to game_state, otherwise not accessed
+* has a game_state -- attached to controller, (dangling access for current_room)
+* has a current_room -- not accessed
+* has a controller
+
+##### Controller
+    basically command dispatching
+* has a game_state
+* has a action, target -- not needed, can be locals pass directly to dispatch
+
+##### Game_state
+* has the (site) map
+* has the player
+* has a season
+
+##### Room
+* has name
+* has content
+* has focus (? player specific)
+
+##### Player
+* has location
+
+##### Game object and multiple related modules
+* documentation pending 
+## End Current
+
+****************************************************************
+## Start Refactored
+
 #### Game
 * has PlayerQueue
-* has Universe
+* has GameMaze
 * uses PlayerInput (interpretor)
 * has PlayerMode (interactive/scripted)
 * has EventQueues (tbd)
 * event generator ... Save, tbd
 * uses random generators (dice, timers) ... Placeholder, may not belong here
+* has cycles
+
+### Cycles
+* has (is?) a cycle queue
+* receives CycleQueueEvent
+* generates CycleEvents
 
 ### PlayerQueue
 * has Players
@@ -60,15 +98,12 @@ Work in progress. Non structured list of potential objects within the game.
 * has dispositions
 * has PlayerObjects
 
-### Universe
-* has GameMap
+### GameMaze
 * can receive GameMapEvents
-
-### GameMap
 * has Rooms
-* has Regions ... tbd
-* has Towns ... tbd
-
+* can have Regions 
+* can have Towns 
+* can have geographic features
 
 ### Room
 * has location

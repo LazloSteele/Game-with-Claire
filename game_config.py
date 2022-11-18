@@ -13,8 +13,8 @@ class GameConfigLoader():
     to the module level global 'loadedConfig'
     Only method meant to be called externally is load_game_config
     """
-    def __init__(self):
-        pass
+    def __init__(self, args):
+        self._args = vars(args)
 
     @staticmethod
     def _make_load_path( env_name, cfg_path, cfg_file ):
@@ -26,6 +26,7 @@ class GameConfigLoader():
         delim = r'\\'
         pathname = cfg_path + delim + env_name + delim + cfg_file
         return os.path.normpath(pathname)
+
 
     def load_game_config( self, env_name='default', cfg_path='Config', cfg_file='GameSettings.json'):
         """ 
@@ -107,9 +108,9 @@ class GameConfig():
         suit_vals = self._loaded_cfg._cfg_data['suit_attrs'][suit]
         return suit_vals['descriptors']
 
-            
+    def player_name( self, default="Guest" ):
+        return self._get_arg_val( 'player_name', default )
 
-
-
-
+    def _get_arg_val( self, key, default ):
+        return self._loaded_cfg._args[key] if key in self._loaded_cfg._args else default
 

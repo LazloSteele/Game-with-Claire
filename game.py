@@ -1,20 +1,14 @@
-from player import Player
-from controller import Controller
 from game_state import GameState
-from game_config import GameConfigLoader,GameConfig
+from game_config import GameConfigLoader
+from game_impl import GenesisGame
 import argparse
 
 class Game():
     def __init__(self):
         self._cmdline_args = self.process_cmdline()
-        GameConfigLoader().load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
-        # player_name default = Guest
-        self._player = Player()
-        self._game_state = GameState(self._player)
-    
-        self._controller = Controller(self._game_state)
-
-        self._current_room = self._game_state.current_room()
+        # Loader attaches the passed namesapce for any extra config, but we'll still pass in the load params so they're decoupled
+        gcl = GameConfigLoader(self._cmdline_args)
+        gcl.load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
 
         self.main()
 
@@ -43,20 +37,9 @@ class Game():
         return parser.parse_args()
 
     def main(self):
-        playing = True
+        the_game = GenesisGame()
+        return the_game.run()
 
-        print('Type "QUIT" at any time to exit the game.')
-        self._controller.look(None)
-        
-        while playing == True:
-        
-            command = input("What do you do?")
-
-            if command.upper() == 'QUIT':
-                playing == False
-                return
-
-            self._controller.interpret(command)
             
 if __name__ == "__main__":
     game = Game()
