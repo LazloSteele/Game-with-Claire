@@ -1,15 +1,13 @@
 from game_state import GameState
-from game_config import GameConfigLoader
+from game_config import GameConfigLoader,InitGlobals,Globals
 from game_impl import GenesisGame
 import argparse
 
 class Game():
     def __init__(self):
         self._cmdline_args = self.process_cmdline()
-        # Loader attaches the passed namesapce for any extra config, but we'll still pass in the load params so they're decoupled
-        gcl = GameConfigLoader(self._cmdline_args)
-        gcl.load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
-
+        InitGlobals(self._cmdline_args)
+        GameConfigLoader().load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
         self.main()
 
     def process_cmdline(self):
@@ -33,6 +31,11 @@ class Game():
             '--player_name', 
             default='Guest',
             help='Your name -- pending implementation'
+            )
+        parser.add_argument(
+            '--dev_mode', 
+            default='0',
+            help='Sets devmode -- pending implementation'
             )
         return parser.parse_args()
 

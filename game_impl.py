@@ -1,7 +1,6 @@
 
 from game_config import GameConfig
 from game_state import GameState
-from controller import Controller
 
 
 """
@@ -24,7 +23,6 @@ class GameImpl():
 class GenesisGame():
     def __init__(self):
         self._game_state = GameState()
-        #self._controller = Controller(self._game_state)
         pass
 
     def run(self):

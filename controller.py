@@ -3,38 +3,27 @@ from navigation import Navigation
 
 class Controller():
     def __init__(self, game_state):
-        
-        self._action = None
-        self._target = None
-        
         self._possible_actions = {'LOOK': self.look, 'GO': self.move}
-
         self._game_state = game_state
 
     def interpret(self, command):
         command = command.upper().split()
+        action = command[0]
+        target = command[1] if len(command)>1 else None
+#        try:
+#            target = command[1]
+#        except:
+#            target = None
+        self.dispatcher(action,target)
 
-        self._action = command[0]
+    def dispatcher(self,action,target):
         try:
-            self._target = command[1]
-        except:
-            pass
-
-        self.dispatcher()
-
-    def dispatcher(self):
-        try:
-            self._possible_actions[self._action](self._target)
+            self._possible_actions[action](target)
         except KeyError:
-            self.action_error()
+            self.action_error(action)
 
-        self._action = None
-        self._target = None
-        
     def look(self, target):
         sights = self._game_state.current_room().contents
-
-        
         if target == None:
             print(DescribeRoom(self._game_state.current_room()).look())
         else:
@@ -47,11 +36,11 @@ class Controller():
         print(DescribeRoom(self._game_state.current_room()).enter())
 
 
-    def action_error(self):
-        print('I am sorry, that action is not valid')
+    def action_error(self,action):
+        print(f'I am sorry, "{action}" is not valid')
 
 
-# XXX first step in migrating to subclass
+# XXX just a proxy for Controller, first step in migrating to subclass
 class PlayerController(Controller):
     def __init__(self, game_state):
         super().__init__(game_state)

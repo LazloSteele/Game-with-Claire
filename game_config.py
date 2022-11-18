@@ -3,9 +3,40 @@ import json
 import re
 import os.path
 
+# XXX -- migrate the current loadedConfig object into objects for different domains (e.g. PlayerConfig,etc)
+
 # loaded Config gets initialed to a GameConfigLoader as the final step in the load_game_config.
 # In turn copied by the GameConfig class which is meant to be the interface to the configuration
 loadedConfig = None 
+globalsConfig = None
+
+class InitGlobals():
+    # self,cmdline_args):
+    def __init__(self,cmdline_args):
+        global globalsConfig
+        globalsConfig = _GlobalsConfig(cmdline_args)
+
+class Globals():
+    """ usages e.g. Globals.get().dev_mode(0) """
+    @staticmethod 
+    def get(): return globalsConfig
+
+class _GlobalsConfig():
+    def __init__(self,cmdline_args):
+        self._args = vars(cmdline_args)
+        global globalsConfig
+        globalsConfig = self    #GlobalsConfig(cmdline_args)
+
+    # XXX doens't belong here, but will sort out when player config is flushed out
+    def player_name( self, default="Guest" ):
+        return self._get_arg_val('player_name', default)
+
+    def dev_mode(self,default=0):
+        return self._get_arg_val("dev_mode", default)
+
+    def _get_arg_val( self, key, default ):
+        return self._args[key] if key in self._args else default
+
 
 class GameConfigLoader():
     """
@@ -13,8 +44,8 @@ class GameConfigLoader():
     to the module level global 'loadedConfig'
     Only method meant to be called externally is load_game_config
     """
-    def __init__(self, args):
-        self._args = vars(args)
+    def __init__(self):
+        pass
 
     @staticmethod
     def _make_load_path( env_name, cfg_path, cfg_file ):
@@ -82,7 +113,7 @@ class GameConfigLoader():
         """
         # versionings, when/if needed assumed under top level object 'version' as [major, minor ] in the cfg data
         self._suits = list( data['suit_attrs'].keys() )
-
+        # XXX questionable spot for it but for hack the globals config instantiation here
 
 
 class GameConfig():
@@ -108,9 +139,4 @@ class GameConfig():
         suit_vals = self._loaded_cfg._cfg_data['suit_attrs'][suit]
         return suit_vals['descriptors']
 
-    def player_name( self, default="Guest" ):
-        return self._get_arg_val( 'player_name', default )
-
-    def _get_arg_val( self, key, default ):
-        return self._loaded_cfg._args[key] if key in self._loaded_cfg._args else default
 
