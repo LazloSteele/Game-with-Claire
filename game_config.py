@@ -83,21 +83,19 @@ class GameConfigLoader():
             print( f'{self._source_filename} does not exist' )
             return False
 
-        rv = True
-        try: 
-            fp = open( self._source_filename )
-            self._cfg_data = json.load( fp )
-        except JSONDecodeError(msg,doc,pos):
-            print('An error occurred in doc: msg')
-            raise JSONDecodeError(msg,poc,pos)
-        except OSError(errno, strerror):
-            print( f'OSError exception caught, {errno}, {strerror}' )
-            raise OSError(errno, strerror)
-        except:
-            print('Unknown exception caught, probably in open')
-            rv = False
-        finally:
-            fp.close()
+        rv = False
+        with open( self._source_filename, 'r' ) as fp:
+            try: 
+                self._cfg_data = json.load( fp )
+                rv = True
+            except JSONDecodeError(msg,doc,pos):
+                print('An error occurred in doc: msg')
+                raise JSONDecodeError(msg,poc,pos)
+            except OSError(errno, strerror):
+                print( f'OSError exception caught, {errno}, {strerror}' )
+                raise OSError(errno, strerror)
+            except:
+                print('Unknown exception caught, probably in open')
 
         self._organize( self._cfg_data )
         global loadedConfig
@@ -113,7 +111,6 @@ class GameConfigLoader():
         """
         # versionings, when/if needed assumed under top level object 'version' as [major, minor ] in the cfg data
         self._suits = list( data['suit_attrs'].keys() )
-        # XXX questionable spot for it but for hack the globals config instantiation here
 
 
 class GameConfig():
