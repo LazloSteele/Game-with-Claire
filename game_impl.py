@@ -29,14 +29,9 @@ class GenesisGame():
         print('Type "QUIT" at any time to exit the game.')
         self._game_state.current_room() # initial first room, to be removed 
         next_actor = self._game_state.player
-        #self._controller.look(None)     # look into why needed
         while True:
             result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
             if result == 1:
                 return result;
-            #command = input("What do you do?")
-            #if command.upper() == 'QUIT':
-            #    return 1
-            #self._controller.interpret(command)
         return 0
 

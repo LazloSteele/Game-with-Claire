@@ -2,8 +2,13 @@
 import sys
 sys.path.append( ".." )
 
-from player import Player
-player = Player()
+from player import HumanPlayer
+
+class GameSiteMock():
+    def __init__(self):
+        pass
+
+player = HumanPlayer(GameSiteMock(), "name")
 
 class PlayerTest():
     def __init__(self):

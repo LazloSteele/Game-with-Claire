@@ -14,15 +14,15 @@ Responsible for
 
 ### GenesisGame -- initial game impl
 * has a GameState
-* has a Controller
-in process, moving controller into actors
+* has the game run method 
+pending
+* spawns game tasks
     
 ### Controller
 currently
 * has an attached game_state
 * handles the player action
 in process, subclassing for various active components .. initially player
-
 
 ### GameState
 currently
@@ -34,6 +34,11 @@ projected
 * has a sitemap object 
 * has a player list
 * current_room is held within the players context
+
+##### SiteMap
+adding in process 
+* 
+
 
 ##### Player    
 * has location (raw array with a getter/setter)
@@ -52,10 +57,6 @@ projected
 
 *Below here are varying levels or correctness, randomness, and just plain wrong*
 
-##### Room
-* has name
-* has content
-* has focus (? player specific)
 
 #### Game
 * has PlayerQueue
@@ -126,6 +127,7 @@ projected
 * has location
 * has RoomBounderies
 * has RoomInternal
+* has VisitedStats
 
 ### RoomBounderies
 * has location (enum north/south/east/west/over/under)

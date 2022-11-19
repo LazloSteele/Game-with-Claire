@@ -4,7 +4,7 @@ from enum import Enum,auto
 class LocType(Enum):
     DIM_2 = auto()      # 2 dimisional, lexicon is n/s/e/w
     DIM_3 = auto()      # 3 dimisional, lexicon n/s/e/w/u/d
-    ANYWHERE = auto()
+    ANYWHERE = auto()   # XXX on second look, these three should be attributes rather than types
     NOWHERE = auto()
     HIDDEN = auto()
 

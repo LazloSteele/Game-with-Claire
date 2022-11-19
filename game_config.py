@@ -3,7 +3,7 @@ import json
 import re
 import os.path
 
-# XXX -- migrate the current loadedConfig object into objects for different domains (e.g. PlayerConfig,etc)
+# XXX -- todo migrate the current loadedConfig object into objects for different domains (e.g. PlayerConfig,etc)
 
 # loaded Config gets initialed to a GameConfigLoader as the final step in the load_game_config.
 # In turn copied by the GameConfig class which is meant to be the interface to the configuration
