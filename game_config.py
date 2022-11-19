@@ -59,7 +59,7 @@ class GameConfigLoader():
         return os.path.normpath(pathname)
 
 
-    def load_game_config( self, env_name='default', cfg_path='Config', cfg_file='GameSettings.json'):
+    def load_game_config( self, env_name='Genesis', cfg_path='Config', cfg_file='GameSettings.json'):
         """ 
         Top level function to loads the game environment.
 

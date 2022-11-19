@@ -23,7 +23,7 @@ class Game():
         )
         parser.add_argument(
             '--game_name', 
-            default='Default' ,
+            default='Genesis' ,
             metavar='GameConfig',
             help='Name of the game, assumed a .json filename'
         )
