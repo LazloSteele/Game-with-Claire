@@ -1,6 +1,19 @@
 
 {
         "version" : [1 , 0 ],
+        "actors" : {
+            "interactive" : [
+                {
+                    "type" : "human",
+                    "name" : "generate_me"
+                }
+            ]
+        },
+        "game_map" : {
+            "dimsions" : 2,
+            "x_bounds" : 1000,
+            "y_bounds" : 2000
+        },
         "suit_attrs" : {
                 "HEMLOCK" : {
                     "descriptors" : [
