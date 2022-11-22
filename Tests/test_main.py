@@ -1,5 +1,7 @@
 
 import sys
+if '..' not in sys.path:
+    sys.path.append( '..' )
 
 import unittest
 from playertest import PlayerTest
@@ -17,7 +19,6 @@ class TestMethods(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    sys.path.append( ".." )
     unittest.main()
 
 

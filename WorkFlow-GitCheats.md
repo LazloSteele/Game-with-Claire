@@ -41,9 +41,24 @@ Working with branches:
 	Show remote branches:
 		git branch -r
 
+	Show all branches:
+		git branch -a
+
 	Fetch and merge from remote into current branch:
 		git pull
 
 	Fetch from remote w/o merge:
 		git fetch
 	
+## Deleting branches (local / remote / localtracking)
+See the following for both a tl;dr anwswer, and nice detailed description
+* https://stackoverflow.com/questions/2003505/how-do-i-delete-a-git-branch-locally-and-remotely/23961231#23961231
+* Cheatsheet
+  * git push origin -d (or --delete) <branch> 
+    * this deletes the remote brach and the local remote-tracking branch
+  * git branch -d (or --delete) <branch>
+    * this deletes the local branch
+  * git fetch origin -p (or --prune)
+    * syncs your local remote-tracking directories (esp if someone else removed the branches from the remote)
+  * In particular see the above link for how there are three branches involved with deletion
+

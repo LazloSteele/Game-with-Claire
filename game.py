@@ -1,13 +1,13 @@
-from game_state import GameState
-from game_config import GameConfigLoader,InitGlobals,Globals
+
+from game_config import GlobalsConfigLoader,GameConfigLoader
 from game_impl import GenesisGame
 import argparse
 
 class Game():
     def __init__(self):
-        self._cmdline_args = self.process_cmdline()
-        InitGlobals(self._cmdline_args)
-        GameConfigLoader().load_game_config( self._cmdline_args.game_name, self._cmdline_args.config_path )
+        cmdline_args = self.process_cmdline()
+        GlobalsConfigLoader(vars(cmdline_args))
+        GameConfigLoader().load_game_config(cmdline_args.game_name,cmdline_args.config_path)
         self.main()
 
     def process_cmdline(self):

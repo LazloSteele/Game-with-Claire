@@ -1,47 +1,36 @@
 
 import json
-import re
 import os.path
 
-# XXX -- todo migrate the current loadedConfig object into objects for different domains (e.g. PlayerConfig,etc)
+""" 
+    Loads and holds the configuration of various domains of the game.
+    Basic pattern:
+        All external access to a set of configuration values are held within an IxxxConfig class.
+        The IxxxConfig class is subclassed by a loader and a retriver class.
+        The loader initializes super() and gets stashed in a known location by the loader creator.
+        The retriver returns the loader from that location.
+        All access to the data is implemented within the conmon IxxxConfig.
+        The retriver caller does not know/care that it's actually accessing via a loader class.
+        The magic here is __new__ of the retriver returning a different class, the preexisting loader.
+        All further initialization of a class is bypassed when __new__ returns a different class.
 
-# loaded Config gets initialed to a GameConfigLoader as the final step in the load_game_config.
-# In turn copied by the GameConfig class which is meant to be the interface to the configuration
-loadedConfig = None 
-globalsConfig = None
+    Notes:
+        To avoid excessive validation code it is presumed that configurations and code are stable.
+        This assumes careful testing when making changes to implemention, either config or code.
+        Tests\GameConfigDriver.py can be used/modified for this purpose.
+        Note that by default the Ixxx class might be holding raw input data which is mutable.
+        The ability of a caller to unexpectly modify the raw data via retrived data requires testing.
+"""
 
-class InitGlobals():
-    # self,cmdline_args):
-    def __init__(self,cmdline_args):
-        global globalsConfig
-        globalsConfig = _GlobalsConfig(cmdline_args)
-
-class Globals():
-    """ usages e.g. Globals.get().dev_mode(0) """
-    @staticmethod 
-    def get(): return globalsConfig
-
-class _GlobalsConfig():
-    def __init__(self,cmdline_args):
-        self._args = vars(cmdline_args)
-        global globalsConfig
-        globalsConfig = self    #GlobalsConfig(cmdline_args)
-
-    # XXX doens't belong here, but will sort out when player config is flushed out
-    def player_name( self, default="Guest" ):
-        return self._get_arg_val('player_name', default)
-
-    def dev_mode(self,default=0):
-        return self._get_arg_val("dev_mode", default)
-
-    def _get_arg_val( self, key, default ):
-        return self._args[key] if key in self._args else default
-
+_cfgQualities = None 
+_cfgGamemap = None
+_cfgGlobals = None
 
 class GameConfigLoader():
     """
-    GameConfigLoader loads in the game configuration from the specified json file then copies self
-    to the module level global 'loadedConfig'
+    GameConfigLoader 
+        loads in the game configuration from the specified json file
+        creates and stores the various comfiguration domains into the associated module globals
     Only method meant to be called externally is load_game_config
     """
     def __init__(self):
@@ -98,42 +87,113 @@ class GameConfigLoader():
                 print('Unknown exception caught, probably in open')
 
         self._organize( self._cfg_data )
-        global loadedConfig
-        loadedConfig = self;
         return rv
 
     def _organize( self, data ):
         """ 
-        Business logic to decode the raw data from the higer level organization.
-        Questionable approach but will see if it shakes out
-
+        Partition/Decode the loaded data into configuration domains
         Assumed a "private method" where data will be the self._cfg_data unless called from unit test code
         """
-        # versionings, when/if needed assumed under top level object 'version' as [major, minor ] in the cfg data
-        self._suits = list( data['suit_attrs'].keys() )
+        global _cfgQualities
+        _cfgQualities = GameConfigCreate(data)
+        global _cfgGamemap 
+        _cfgGamemap = GameMapConfigCreate(data['game_map'])
 
-
-class GameConfig():
+#********************** GameConfig (Qualities) classes
+class IGameConfig():
     """ 
-    GameConfig provides the interface to the attributes in a previously loaded GameConfigLoader
+    GameConfig provides the interface to the attributes of 'game_object' thingies
     """
-    def __init__(self):
-        global loadedConfig
-        self._loaded_cfg = loadedConfig 
+    # __init__ should only get invoked by GameConfigCreate
+    def __init__(self, data):
+        self._cfg_data = data
 
+    def _test_expectedkeys(self):
+    # XXX next pass, pending completion of refactoring
+        pass
 
     def get_suits(self):
-        """
-        Returns list of available suits
-        """
-        return self._loaded_cfg._suits
+        """ Returns list of available suits """
+        return list( self._cfg_data['suit_attrs'].keys() )
 
     def get_suit_descriptor(self, suit):
-        """
-        Returns desciptor from passed in suit
-        Todo: define error handling, can throw if access invalid
-        """
-        suit_vals = self._loaded_cfg._cfg_data['suit_attrs'][suit]
-        return suit_vals['descriptors']
+        """ Returns a copy of the desciptors of a 'suit' """
+        return self._cfg_data['suit_attrs'][suit]['descriptors'].copy()
+
+class GameConfigCreate(IGameConfig):
+    """ Initializes an IGameConfig from the passed in hash. """
+    def __init__(self, data):
+        super().__init__(data)
+
+class GameConfig(IGameConfig):
+    """ returns a previously initialized IGameConfig held in a module global """
+    """ Note: the object returned by new is deliberately a different class from GameConfig """
+    def __new__(cls, *args ):
+        global _cfgQualities 
+        # don't really need the if/else, just making it explicit that None is a possible return value
+        return _cfgQualities if (_cfgQualities) else None
+
+    def __init__(self, something):
+        # 'something' is to cause a missing parameter exception if it get's here, which it shouldn't 
+        pass
+
+#***************** GameMap Config classes ****************
+class IGameMapConfig():
+    # __init__ should only get invoked by GameMapConfigCreate
+    def __init__(self, data):
+        self._cfg_data = data
+
+    def _test_expectedkeys(self):
+    # XXX next pass, pending completion of refactoring
+        pass
+
+class GameMapConfigCreate(IGameMapConfig):
+    """ Initializes an IGameMapConfig from the passed in hash. """
+    def __init__(self, data):
+        super().__init__(data)
+
+class GameMapConfig(IGameConfig):
+    """ returns a previously initialized IGameMapConfig held in a module global """
+    def __new__(cls, *args ):
+        global _cfgGamemap 
+        # don't really need the if/else, just making it explicit that None is a possible return value
+        return _cfgGamemap if (_cfgGamemap) else None
+
+    def __init__(self, something):
+        # something is to cause a missing parameter exception if it get's here, which it shouldn't 
+        pass
+
+#***************** Globals Config classes (via cmdline args not sjon****************
+class IGlobalsCfg():
+    def __init__(self,args):
+        self._args = args
+
+    @property
+    def player_name( self, default="" ):
+        return self._get_arg_val('player_name', default)
+
+    @property
+    def dev_mode(self,default=0):
+        return self._get_arg_val("dev_mode", default)
+
+    def _get_arg_val( self, key, default ):
+        return self._args[key] if key in self._args else default
+
+class GlobalsConfigLoader(IGlobalsCfg):
+    # note: use to expect argparse.Namespace, now requires caller converts to dict via vars()
+    def __init__(self,args):
+        super().__init__(args)
+        global _cfgGlobals
+        _cfgGlobals = self
+
+class GlobalsConfig(IGlobalsCfg):
+    def __new__(cls, *args ):
+        global _cfgGlobals
+        # don't really need the if/else, just making it explicit that None is a possible return value
+        return _cfgGlobals if (_cfgGlobals) else None
+
+    def __init__(self, something):
+        # 'something' is to cause a missing parameter exception if it get's here, which it shouldn't 
+        pass
 
 

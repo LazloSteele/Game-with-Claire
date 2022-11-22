@@ -1,6 +1,7 @@
 
 import sys
-sys.path.append( ".." )
+if '..' not in sys.path:
+    sys.path.append( '..' )
 
 from player import HumanPlayer
 

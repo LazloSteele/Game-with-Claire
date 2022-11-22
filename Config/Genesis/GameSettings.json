@@ -10,9 +10,10 @@
             ]
         },
         "game_map" : {
-            "dimsions" : 2,
-            "x_bounds" : 1000,
-            "y_bounds" : 2000
+            "Comment" : "This section for site map parameters. Not big enough to justify a different config",
+            "version" : [1 , 0 ],
+            "origin" : [ 0,  0],
+            "bounds" : [ 10000, 10000 ]
         },
         "suit_attrs" : {
                 "HEMLOCK" : {

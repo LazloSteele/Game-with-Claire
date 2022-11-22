@@ -1,12 +1,12 @@
 
-from game_config import Globals
+from game_config import GlobalsConfig
 from player import HumanPlayer
 from room import Room
 
 class GameState():
     def __init__(self):
         self._map = {}
-        self._player_name = Globals().get().player_name("You")
+        self._player_name = GlobalsConfig().player_name
         self._player = HumanPlayer(self,self._player_name)
         self._season = 'SUMMER'
 
