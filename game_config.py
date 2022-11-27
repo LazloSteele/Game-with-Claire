@@ -1,6 +1,7 @@
 
 import json
 import os.path
+import copy
 
 """ 
     Loads and holds the configuration of various domains of the game.
@@ -139,13 +140,72 @@ class GameConfig(IGameConfig):
 
 #***************** GameMap Config classes ****************
 class IGameMapConfig():
+    """ 
+    (Not sure where these comments belong yet but probably not here.)
+    Work in progress. 
+    1.) 
+    The dimisions of a game map are currently defined by a bounds array of ints or Nones.
+    The length of the bounds array sets the number of diminsions.
+    (Underlying implementaion supports only 2 diminsional maps at this point.)
+    The value of a diminsion sets the maximum movement for that diminsion.
+    None for unbounded, otherwise interpreted as a range -(bounds)/2 .. bound/2.
+    This sets the center of the map at [0,0] for the convenience of placing objects on the map.
+    It is possible to specify an origin of the map, so that [0,0] would become some offset from the center.
+    E.g. origin[ -10, x ] with a bounds of [10000,x] would allow 5010 movements 'west' and 4990 movements 'east' from [0,0]
+    In hindsight this is of questionably utility but since already implemented will be kept in case a use arises.
+    2.)
+    Pending definition/implementation is specification of attributes within specified locations. It is likely these features
+    can feature submaps. I.e. locations within the toplevel map could hold embedded maps.
+    
+    """
     # __init__ should only get invoked by GameMapConfigCreate
     def __init__(self, data):
         self._cfg_data = data
+        self._validate()
 
-    def _test_expectedkeys(self):
-    # XXX next pass, pending completion of refactoring
-        pass
+    def _validate(self):
+        origin = self._cfg_data.get('origin')
+        if ( origin == None ):
+            self._cfg_data['origin'] =  [0] * self.dimisions()
+
+    @property
+    def raw_data(self):
+        """ if something wants the raw data insure it's an immutable copy. Should be test code only in general """
+        return copy.deepcopy(self._cfg_data)
+    
+    @property
+    def _mutable_raw_data(self):
+        """ return a mutable copy of the raw data, only use should for unit test code to tweak parameters """
+        return self._cfg_data
+
+    @property 
+    def diminisions(self):
+        return len(self._cfg_data['bounds'])
+
+    @property 
+    def origin(self):
+        return self._cfg_data['origin'].copy();
+
+    @property
+    def lengths(self):
+        return self._cfg_data['bounds'].copy()
+
+    @property 
+    def min_max_x(self):
+        xmins = self._dim_min_max(self._cfg_data['bounds'][0], self._cfg_data['origin'][0])
+        return xmins
+
+    @property 
+    def min_max_y(self):
+        return self._dim_min_max(self._cfg_data['bounds'][1], self._cfg_data['origin'][1])
+
+    def _dim_min_max(self, rawsize, startpoint):
+        if (rawsize == None): return [None, None]
+        split = int(rawsize/2) 
+        #if (startpoint < split): 
+        return [-split+startpoint,split+startpoint]
+        #if (startpoint == 0): return [-rawsize, rawsize]
+        return [-rawsize+startpoint, rawsize+startpoint]
 
 class GameMapConfigCreate(IGameMapConfig):
     """ Initializes an IGameMapConfig from the passed in hash. """

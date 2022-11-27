@@ -6,6 +6,7 @@ sys.path.append('..')
 
 from game_config import GameConfigLoader
 from game_config import GlobalsConfigLoader,GlobalsConfig,GameConfig
+from game_config import GameMapConfig
 
 
 class ConfigDriver():
@@ -17,6 +18,9 @@ class ConfigDriver():
         args = vars(cmdlineArgs)
         GameConfigLoader().load_game_config(args['game_name'], args['config_path'])
 
+        self.check_gamemap_config() 
+        return
+
         print("\nRunning globals config" )
         self.check_globals_loading(args)        # with namespace
         print("Done globals config, validate output\n")
@@ -24,6 +28,23 @@ class ConfigDriver():
         print("\nExercising game config (qualities) access\n")
         self.check_qualities()
         print("Done, validate output\n")
+
+    def check_gamemap_config(self):
+        gmc = GameMapConfig()
+        data = gmc._mutable_raw_data
+        dims = gmc.min_max_x
+        print("Testing x origin offsetting")
+        for i in [0, 1,-1, -10, -10000,10000]:
+            data['origin'][0] = i
+            dims = gmc.min_max_x
+            print(f"{i} {dims} distance {abs(dims[0]-dims[1])}")
+        dims = gmc.min_max_y
+        print("Testing y origin offsetting")
+        for i in [0, 1,-1,-10000,10000]:
+            data['origin'][1] = i
+            dims = gmc.min_max_y
+            print(f"{i} {dims} distance {abs(dims[0]-dims[1])}")
+
 
     def check_qualities(self):
         gc = GameConfig()
