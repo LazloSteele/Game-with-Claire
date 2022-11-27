@@ -1,8 +1,7 @@
 
 from game_config import GameConfig
 from game_state import GameState
-from comm_channel import SegratedOutput
-
+from comm_channel import SegregatedOutput
 
 """
 GameImpl defines the interface that all game implementations are expected to have
@@ -22,8 +21,8 @@ class GameImpl():
 
 class GenesisGame():
     def __init__(self):
-        SegratedOutput().startup()
-        SegratedOutput.get().send_message( "Creating GameState")
+        SegregatedOutput().startup()
+        SegregatedOutput.get().send_message( "Creating GameState")
         self._game_state = GameState()
         pass
 
@@ -35,6 +34,6 @@ class GenesisGame():
             result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
             if result == 1:
                 return result;
-        SegratedOutput.get().shutdown()
+        SegregatedOutput.get().shutdown()
         return 0
 
