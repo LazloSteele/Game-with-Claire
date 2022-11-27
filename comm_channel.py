@@ -14,14 +14,27 @@ import re
 # singleton class for first pass
 segregatedOutput=None
 
+class CommChannelSink():
+    def __init__self__():
+        pass
+    def startup(self):
+        pass
+    def shutdown(self):
+        pass
+    def send_message(self, message, verbose=False ):
+        pass
+
 class SegregatedOutput():
     def __init__(self):
         self._child_proc = None
         pass
 
-    def get(): 
+    def get(force_startup=False): 
+        # XXX the force_startup thought is questionable
         global segregatedOutput
-        return segregatedOutput
+        if segregatedOutput == None and force_startup:
+           SegregatedOutput().startup()
+        return segregatedOutput if segregatedOutput!=None else CommChannelSink()
 
     def startup(self):
         if (self._child_proc != None): self.shutdown()
@@ -46,12 +59,12 @@ class SegregatedOutput():
         global segregatedOutput
         segregatedOutput = None
 
-    def child_is_alive(self):
+    def _child_is_alive(self):
         return self._child_proc != None and self._child_proc.poll() == None
 
     # XXX raw text message for first pass, protocol definition pending
     def send_message(self, message, verbose=False ):
-        if self.child_is_alive():
+        if self._child_is_alive():
             print(f"Sending message '{message}'")
             if re.search('\n$', message) == None:
                 message += '\n';
@@ -64,11 +77,16 @@ if __name__=="__main__":
     """ quick test """ 
     SegregatedOutput().startup()
     SegregatedOutput.get().send_message("Game comm channel ...")
-    i = 0
-    for i in range(1, 10):
+    for i in range(1, 6):
         SegregatedOutput.get().send_message(f"Message {i}",verbose=True)
         sleep(1)
     SegregatedOutput.get().shutdown()
-    sleep(2)
+# check returns a sink if no instance
+    print(f"Check this is a CommChnnelSink object: {SegregatedOutput.get()}")
+    SegregatedOutput.get().send_message(f"This should be dropped",verbose=True)
+    print("Sending message with get(force_startup=True), should see it")
+    SegregatedOutput.get(force_startup=True).send_message("Message with get(force_startup=True)",verbose=True)
+    sleep(5)    # let it hang out for a bit before closing
+    SegregatedOutput.get().shutdown()
 
  
