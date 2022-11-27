@@ -6,6 +6,7 @@
 # garbage files which are created w/ intent to be ignore
 **/crap.*
 **/temp.*
+**/*.tmp
 
 # python artifacts
 __pycache__/

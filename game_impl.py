@@ -1,6 +1,7 @@
 
 from game_config import GameConfig
 from game_state import GameState
+from comm_channel import SegratedOutput
 
 
 """
@@ -9,7 +10,6 @@ GameImpl defines the interface that all game implementations are expected to hav
     Not meant to be directly instantiated though not enforced at this point. To enforce:
 from abc import ABC
 class GameImpl(ABC):
-
 """
 
 class GameImpl():
@@ -22,6 +22,8 @@ class GameImpl():
 
 class GenesisGame():
     def __init__(self):
+        SegratedOutput().startup()
+        SegratedOutput.get().send_message( "Creating GameState")
         self._game_state = GameState()
         pass
 
@@ -33,5 +35,6 @@ class GenesisGame():
             result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
             if result == 1:
                 return result;
+        SegratedOutput.get().shutdown()
         return 0
 
