@@ -1,4 +1,7 @@
 
+# python virtual environments
+venv/*
+
 # vim files
 **/*~
 **/*.sw?
