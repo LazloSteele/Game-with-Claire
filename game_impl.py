@@ -1,7 +1,9 @@
 
+import threading
 from game_config import GameConfig
 from game_state import GameState
 from comm_channel import SegregatedOutput
+from time_keeper import TimeKeeper
 
 """
 GameImpl defines the interface that all game implementations are expected to have
@@ -21,19 +23,26 @@ class GameImpl():
 
 class GenesisGame():
     def __init__(self):
+        # XXX tie timekeeper scaling stats into config
+        timer = TimeKeeper( ( 2, 2, 2, 2, 2, 2, 4 ),"MainTimer" )
+        # don't start timer yet until tied into something
+        #timer.start()  
+
         SegregatedOutput().startup()
         SegregatedOutput.get().send_message( "Creating GameState")
         self._game_state = GameState()
-        pass
 
     def run(self):
-        print('Type "QUIT" at any time to exit the game.')
-        self._game_state.current_room() # initial first room, to be removed 
-        next_actor = self._game_state.player
-        while True:
-            result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
-            if result == 1:
-                return result;
-        SegregatedOutput.get().shutdown()
+        try:
+            print('Type "QUIT" at any time to exit the game.')
+            self._game_state.current_room() # initial first room, to be removed 
+            next_actor = self._game_state.player
+            while True:
+                result = next_actor.take_turn()     # should return ControlAction::Continue, or ControlAction::Terminate
+                if result == 1:
+                    return result;
+        finally:
+            SegregatedOutput.get().shutdown()
+            TimeKeeper.get("MainTimer").shutdown()
         return 0
 

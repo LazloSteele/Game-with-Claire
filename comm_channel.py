@@ -65,12 +65,12 @@ class SegregatedOutput():
     # XXX raw text message for first pass, protocol definition pending
     def send_message(self, message, verbose=False ):
         if self._child_is_alive():
-            print(f"Sending message '{message}'")
+            if verbose: print(f"Sending message '{message}'")
             if re.search('\n$', message) == None:
                 message += '\n';
             self._child_proc.stdin.write(message)
             self._child_proc.stdin.flush()
-        elif (verbose): print(f"In send_message, with {message}")
+        elif (verbose): print("send_message, no comm process !!")
 
 
 if __name__=="__main__":
